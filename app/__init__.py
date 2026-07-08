@@ -11,6 +11,5 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     ma.init_app(app)
-
-app.register_blueprint(home_bp)
+    app.register_blueprint(home_bp)
     return app
