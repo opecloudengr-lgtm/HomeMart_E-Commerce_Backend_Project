@@ -1,7 +1,8 @@
 # Application factory
 from flask import Flask
-from .config import Config
-from .extensions import db, migrate, ma
+from app.config import Config
+from app.extensions import db, migrate, ma
+from app.routes import home_bp
 
 def create_app():
     app = Flask(__name__)
@@ -11,7 +12,5 @@ def create_app():
     migrate.init_app(app, db)
     ma.init_app(app)
 
-    @app.route('/')
-    def index():
-        return {"success": True, "message": "Welcome to the HomeMart E-Commerce Backend!"}
+app.register_blueprint(home_bp)
     return app

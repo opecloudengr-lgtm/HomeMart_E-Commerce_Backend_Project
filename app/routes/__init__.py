@@ -1,0 +1,1 @@
+from app.routes.home import home_bp
