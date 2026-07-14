@@ -1,10 +1,10 @@
 from marshmallow import fields
 from app.extensions import ma
-from app.models.wishlist import Wishlist
+from app.models.wishlist_item import WishlistItem
 
-class WishlistSchema(ma.SQLAlchemyAutoSchema):
+class WishlistItemSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = Wishlist
+        model = WishlistItem
         load_instance = True
         include_fk =True
 
@@ -12,5 +12,5 @@ class WishlistSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    wishlist_schema = WishlistSchema()
-    wishlists_schema = WishlistSchema(many=True)
+    wishlist_item_schema = WishlistItemSchema()
+    wishlist_items_schema = WishlistItemSchema(many=True)

@@ -1,15 +1,15 @@
 from marshmallow import fields
 from app.extensions import ma
-from app.models.banner import Banner
+from app.models.discount import Discount
 
-class BannerSchema(ma.SQLAlchemyAutoSchema):
+class DiscountSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = Banner
+        model = Discount
         load_instance = True
 
     id = fields.Integer(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    banner_schema = BannerSchema()
-    banners_schema = BannerSchema(many=True)
+    discount_schema = DiscountSchema()
+    discounts_schema = DiscountSchema(many=True)
