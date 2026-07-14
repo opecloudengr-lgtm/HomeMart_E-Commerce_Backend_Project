@@ -1,6 +1,7 @@
 from app.mixins import BaseModel
 from app.extensions import db
 
+
 class Banner(BaseModel):
     __tablename__="banners"
 

@@ -1,7 +1,8 @@
 # Application factory
-from flask import Flask
+from flask import Flask, app
 from app.config import Config
 from app.extensions import db, migrate, ma
+import app.models
 from app.routes import home_bp
 
 def create_app():

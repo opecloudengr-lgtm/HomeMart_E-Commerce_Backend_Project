@@ -10,5 +10,8 @@ class OrderItem(BaseModel):
     unit_price = db.Column(db.Numeric(10, 2), nullable=False)
     subtotal = db.Column(db.Numeric(10, 2), nullable=False)
 
+    order = db.relationship("Order", back_populates="order_items")
+    product = db.relationship("Product", back_populates="order_items")
+
     def __repr__(self):
         return f"<OrderItem Order ID: {self.order_id}, Product ID: {self.product_id}, Quantity: {self.quantity}>"

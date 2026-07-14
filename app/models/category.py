@@ -9,5 +9,7 @@ class Category(BaseModel):
     image_url = db.Column(db.String(255), nullable=True)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
 
+    products = db.relationship("Product", back_populates="category", cascade="all, delete-orphan", lazy=True)
+
     def __repr__(self):
         return f"<Category, {self.name}>"

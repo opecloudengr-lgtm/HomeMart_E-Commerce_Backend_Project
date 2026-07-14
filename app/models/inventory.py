@@ -9,5 +9,7 @@ class Inventory(BaseModel):
     price = db.Column(db.Float, nullable=False, default=0.0)
     low_stock_threshold = db.Column(db.Integer, nullable=False, default=10)
 
+    product = db.relationship("Product", back_populates="inventory")
+
     def __repr__(self):
         return f"<Inventory Product ID: {self.product_id}, Quantity: {self.quantity}, Price: {self.price}, Low Stock Threshold: {self.low_stock_threshold}>"

@@ -11,5 +11,9 @@ class Discount(BaseModel):
     end_date = db.Column(db.DateTime, nullable=False)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
 
+    products = db.relationship(
+        "Product", secondary="product_discounts", back_populates="discounts", lazy=True
+    )
+
     def __repr__(self):
         return f"<Discount {self.name}>"
