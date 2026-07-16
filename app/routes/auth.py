@@ -4,6 +4,7 @@ from app.services.auth_service import AuthService
 from marshmallow import ValidationError
 from app.schemas import register_schema, login_schema
 from app.schemas import user_schema
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -29,4 +30,11 @@ def login():
     response, status = AuthService.login(data)
     if response["success"]:
         response["user"]=user_schema.dump(response["user"])
+    return jsonify(response), status
+
+@auth_bp.post("/refresh-token")
+@jwt_required(refresh=True)
+def refresh_token():
+    current_user_id = get_jwt_identity()
+    response, status = AuthService.refresh_token(current_user_id)
     return jsonify(response), status
