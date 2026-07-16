@@ -41,3 +41,7 @@ class AuthService:
     def refresh_token(user_id):
         access_token = generate_access_tokens(user_id)
         return{"success": True, "message": "Token refreshed successfully", "access_token": access_token}, 200
+    
+    @staticmethod
+    def logout():
+        return{"success": True, "message": "Logout successful."}, 200

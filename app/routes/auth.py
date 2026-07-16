@@ -38,3 +38,9 @@ def refresh_token():
     current_user_id = get_jwt_identity()
     response, status = AuthService.refresh_token(current_user_id)
     return jsonify(response), status
+
+@auth_bp.post("/logout")
+@jwt_required()
+def logout():
+    response, status = AuthService.logout()
+    return jsonify(response), status
