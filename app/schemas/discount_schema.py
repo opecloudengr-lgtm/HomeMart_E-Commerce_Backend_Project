@@ -11,5 +11,5 @@ class DiscountSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    discount_schema = DiscountSchema()
-    discounts_schema = DiscountSchema(many=True)
+discount_schema = DiscountSchema()
+discounts_schema = DiscountSchema(many=True)

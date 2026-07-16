@@ -12,6 +12,8 @@ class User(BaseModel):
     password_hash = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(20), nullable=False, default="customer")
     is_active = db.Column(db.Boolean, default=True, nullable=False)
+    is_verified = db.Column(db.Boolean, default=True, nullable=False)
+    last_login = db.Column(db.DateTime, nullable=True)
 
     addresses = db.relationship("Address", back_populates="user", cascade="all, delete-orphan", lazy=True)
     cart = db.relationship("Cart", back_populates="user", uselist=False, cascade="all, delete-orphan")

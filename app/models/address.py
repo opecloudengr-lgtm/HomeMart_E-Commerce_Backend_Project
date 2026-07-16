@@ -13,6 +13,7 @@ class Address(BaseModel):
     zip_code = db.Column(db.String(20), nullable=False)
     is_active = db.Column(db.Boolean, default=False, nullable=False)
     user = db.relationship("User", back_populates="addresses")
+    orders = db.relationship("Order", back_populates="address", lazy=True)
 
     def __repr__(self):
         return f"<Address{self.city}, {self.country}>"

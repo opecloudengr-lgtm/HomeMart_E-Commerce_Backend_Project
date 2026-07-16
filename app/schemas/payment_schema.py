@@ -12,5 +12,5 @@ class PaymentSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    payment_schema = PaymentSchema()
-    payments_schema = PaymentSchema(many=True)
+payment_schema = PaymentSchema()
+payments_schema = PaymentSchema(many=True)

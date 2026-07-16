@@ -12,5 +12,5 @@ class ProductImageSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    product_image_schema = ProductImageSchema()
-    product_images_schema = ProductImageSchema(many=True)
+product_image_schema = ProductImageSchema()
+product_images_schema = ProductImageSchema(many=True)

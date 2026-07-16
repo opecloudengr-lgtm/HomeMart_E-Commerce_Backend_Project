@@ -11,5 +11,5 @@ class AddressSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    address_schema = AddressSchema()
-    addresses_schema = AddressSchema(many=True)
+address_schema = AddressSchema()
+addresses_schema = AddressSchema(many=True)

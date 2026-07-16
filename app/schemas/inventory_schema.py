@@ -12,5 +12,5 @@ class InventorySchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    inventory_schema = InventorySchema()
-    inventories_schema = InventorySchema(many=True)
+inventory_schema = InventorySchema()
+inventories_schema = InventorySchema(many=True)

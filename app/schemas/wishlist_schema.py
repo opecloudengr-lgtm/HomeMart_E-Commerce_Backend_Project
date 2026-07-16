@@ -12,5 +12,5 @@ class WishlistSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    wishlist_schema = WishlistSchema()
-    wishlists_schema = WishlistSchema(many=True)
+wishlist_schema = WishlistSchema()
+wishlists_schema = WishlistSchema(many=True)

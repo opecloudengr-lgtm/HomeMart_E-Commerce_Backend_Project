@@ -11,5 +11,5 @@ class BrandSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    brand_schema = BrandSchema()
-    brands_schema = BrandSchema(many=True)
+brand_schema = BrandSchema()
+brands_schema = BrandSchema(many=True)

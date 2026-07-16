@@ -11,5 +11,5 @@ class BannerSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    banner_schema = BannerSchema()
-    banners_schema = BannerSchema(many=True)
+banner_schema = BannerSchema()
+banners_schema = BannerSchema(many=True)

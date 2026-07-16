@@ -12,5 +12,5 @@ class ProductSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    product_schema = ProductSchema()
-    products_schema = ProductSchema(many=True)
+product_schema = ProductSchema()
+products_schema = ProductSchema(many=True)

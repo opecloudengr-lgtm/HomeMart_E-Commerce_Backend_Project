@@ -12,5 +12,5 @@ class ReviewSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    review_schema = ReviewSchema()
-    reviews_schema = ReviewSchema(many=True)
+review_schema = ReviewSchema()
+reviews_schema = ReviewSchema(many=True)

@@ -11,5 +11,5 @@ class CategorySchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    category_schema = CategorySchema()
-    categories_schema = CategorySchema(many=True)
+category_schema = CategorySchema()
+categories_schema = CategorySchema(many=True)

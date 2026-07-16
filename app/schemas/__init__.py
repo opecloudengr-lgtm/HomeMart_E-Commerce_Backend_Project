@@ -12,6 +12,8 @@ from app.schemas.payment_schema import PaymentSchema, payments_schema, payment_s
 from app.schemas.product_schema import ProductSchema, products_schema, product_schema
 from app.schemas.product_image_schema import ProductImageSchema, product_images_schema, product_image_schema
 from app.schemas.review_schema import ReviewSchema, reviews_schema, review_schema
-from app.schemas.user_schema import UserSchema, users_schema, user_schema
+from app.schemas.user_schema import UserSchema, users_schema, user_schema, update_user_schema
 from app.schemas.wishlist_schema import WishlistSchema, wishlists_schema, wishlist_schema
 from app.schemas.wishlist_item_schema import WishlistItemSchema, wishlist_items_schema, wishlist_item_schema
+from app.schemas.login_schema import LoginSchema, login_schema
+from app.schemas.register_schema import RegisterSchema, register_schema

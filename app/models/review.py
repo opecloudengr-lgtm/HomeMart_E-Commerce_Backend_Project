@@ -5,6 +5,7 @@ class Review(BaseModel):
     __tablename__ = "reviews"
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Text, nullable=True)
     user = db.relationship("User", back_populates="reviews")

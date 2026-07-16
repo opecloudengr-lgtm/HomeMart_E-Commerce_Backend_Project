@@ -12,5 +12,5 @@ class OrderItemSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    order_item_schema = OrderItemSchema()
-    order_items_schema = OrderItemSchema(many=True)
+order_item_schema = OrderItemSchema()
+order_items_schema = OrderItemSchema(many=True)

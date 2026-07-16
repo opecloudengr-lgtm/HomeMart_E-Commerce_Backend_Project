@@ -12,5 +12,5 @@ class CartSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    cart_schema = CartSchema()
-    carts_schema = CartSchema(many=True)
+cart_schema = CartSchema()
+carts_schema = CartSchema(many=True)

@@ -1,8 +1,8 @@
 """Initial migration
 
-Revision ID: 7c3a691b9486
+Revision ID: 5f7c5d1e8492
 Revises: 
-Create Date: 2026-07-14 09:07:10.877369
+Create Date: 2026-07-15 15:28:00.363818
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7c3a691b9486'
+revision = '5f7c5d1e8492'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -71,6 +71,8 @@ def upgrade():
     sa.Column('password_hash', sa.String(length=255), nullable=False),
     sa.Column('role', sa.String(length=20), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('is_verified', sa.Boolean(), nullable=False),
+    sa.Column('last_login', sa.DateTime(), nullable=True),
     sa.Column('id', sa.String(length=36), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
@@ -114,16 +116,6 @@ def upgrade():
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['brand_id'], ['brands.id'], ),
     sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('reviews',
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('rating', sa.Integer(), nullable=False),
-    sa.Column('comment', sa.Text(), nullable=True),
-    sa.Column('id', sa.String(length=36), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('updated_at', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('wishlist',
@@ -172,7 +164,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('order_number')
     )
-    op.create_table('product_discount',
+    op.create_table('product_discounts',
     sa.Column('product_id', sa.Integer(), nullable=False),
     sa.Column('discount_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['discount_id'], ['discounts.id'], ),
@@ -188,6 +180,18 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('reviews',
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('product_id', sa.Integer(), nullable=False),
+    sa.Column('rating', sa.Integer(), nullable=False),
+    sa.Column('comment', sa.Text(), nullable=True),
+    sa.Column('id', sa.String(length=36), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('wishlist_items',
@@ -236,13 +240,13 @@ def downgrade():
     op.drop_table('payments')
     op.drop_table('order_items')
     op.drop_table('wishlist_items')
+    op.drop_table('reviews')
     op.drop_table('product_images')
-    op.drop_table('product_discount')
+    op.drop_table('product_discounts')
     op.drop_table('orders')
     op.drop_table('inventories')
     op.drop_table('cart_items')
     op.drop_table('wishlist')
-    op.drop_table('reviews')
     op.drop_table('products')
     op.drop_table('carts')
     op.drop_table('addresses')
