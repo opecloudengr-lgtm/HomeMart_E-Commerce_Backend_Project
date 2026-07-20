@@ -3,6 +3,8 @@ from app.models.user import User
 from app.utils.security import hash_password, verify_password
 from app.utils.token import generate_access_tokens, generate_refresh_tokens
 from app.utils.security import (hash_password, verify_password)
+from datetime import datetime, timedelta
+from app.utils.security import (generate_reset_token)
 
 class AuthService:
 
@@ -63,3 +65,18 @@ class AuthService:
         db.session.commit()
 
         return {"success": True, "message": "Password changed successfully."}, 200
+    
+    @staticmethod
+    def forgot_password(data):
+
+        user = User.query.filter_by(email=data["email"]).first()
+
+        if not user:
+            return {"success": False, "message": "User not found."}, 404
+
+        token = generate_reset_token()
+        user.reset_token = token
+        user.reset_token_expires_at = datetime.utcnow() + timedelta(hours=1)
+
+        db.session.commit()
+        return {"success": True, "message": "Password reset instructions have been sent."}, 200
