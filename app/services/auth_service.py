@@ -5,6 +5,7 @@ from app.utils.token import generate_access_tokens, generate_refresh_tokens
 from app.utils.security import (hash_password, verify_password)
 from datetime import datetime, timedelta
 from app.utils.security import (generate_reset_token)
+from app.constants.roles import Role
 
 class AuthService:
 
@@ -16,6 +17,7 @@ class AuthService:
 
         data.pop("confirm_password")
         data["password_hash"] = hash_password(data.pop("password"))
+        data["role"] = Role.CUSTOMER
 
         user = User(**data)
         from datetime import datetime, timedelta

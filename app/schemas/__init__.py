@@ -20,3 +20,11 @@ from app.schemas.register_schema import RegisterSchema, register_schema
 from app.schemas.change_password import (ChangePasswordSchema, change_password_schema)
 from app.schemas.forgot_password import (ForgotPasswordSchema, forgot_password_schema)
 from app.schemas.reset_password import (ResetPasswordSchema, reset_password_schema)
+from app.schemas.update_profile import (
+    UpdateProfileSchema,
+    update_profile_schema,
+)
+from app.schemas.change_email import (
+    ChangeEmailSchema,
+    change_email_schema,
+)

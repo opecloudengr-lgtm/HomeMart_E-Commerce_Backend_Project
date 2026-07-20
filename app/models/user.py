@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.mixins import BaseModel
 from app.extensions import db
+from app.constants.roles import Role
 
 class User(BaseModel):
     __tablename__ = "users"
@@ -18,6 +19,7 @@ class User(BaseModel):
     reset_token_expires_at = db.Column(db.DateTime, nullable=True)
     verification_token = db.Column(db.String(255), nullable=True)
     verification_token_expires_at = db.Column(db.DateTime, nullable=True)
+    role = db.Column(db.String(20), nullable=False, default=Role.CUSTOMER)
 
     addresses = db.relationship("Address", back_populates="user", cascade="all, delete-orphan", lazy=True)
     cart = db.relationship("Cart", back_populates="user", uselist=False, cascade="all, delete-orphan")
