@@ -6,9 +6,9 @@ from app.models.brand import Brand
 class BrandSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Brand
-        load_instance = True
+        load_instance = False
 
-    id = fields.Integer(dump_only=True)
+    id = fields.String(dump_only=True)   # changed from Integer
 
     name = fields.String(
         required=True,
@@ -16,7 +16,6 @@ class BrandSchema(ma.SQLAlchemyAutoSchema):
     )
 
     created_at = fields.DateTime(dump_only=True)
-
     updated_at = fields.DateTime(dump_only=True)
 
 

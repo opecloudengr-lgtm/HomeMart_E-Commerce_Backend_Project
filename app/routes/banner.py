@@ -12,7 +12,7 @@ def get_banners():
     return jsonify({"success": True, "count": len(banners), "data": banners_schema.dump(banners)})
 
 
-@banner_bp.get("/<int:banner_id>")
+@banner_bp.get("/<string:banner_id>")
 def get_banner(banner_id):
     banner = BannerService.get_by_id(banner_id)
 
@@ -31,7 +31,7 @@ def create_banner():
     return jsonify({"success": True, "message": "Banner created successfully.", "data": banner_schema.dump(banner)}), 201
 
 
-@banner_bp.put("/<int:banner_id>")
+@banner_bp.put("/<string:banner_id>")
 def update_banner(banner_id):
     banner = BannerService.get_by_id(banner_id)
 
@@ -45,7 +45,7 @@ def update_banner(banner_id):
     return jsonify({"success": True, "message": "Banner updated successfully.", "data": banner_schema.dump(banner)})
 
 
-@banner_bp.delete("/<int:banner_id>")
+@banner_bp.delete("/<string:banner_id>")
 def delete_banner(banner_id):
     banner = BannerService.get_by_id(banner_id)
 

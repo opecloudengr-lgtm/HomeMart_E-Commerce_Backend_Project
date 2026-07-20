@@ -109,7 +109,7 @@ def get_users():
 
     return jsonify(response), status
 
-@user_bp.get("/<int:user_id>")
+@user_bp.get("/<string:user_id>")
 @admin_required
 def get_user(user_id):
 
@@ -124,7 +124,7 @@ def get_user(user_id):
 
     return jsonify(response), status
 
-@user_bp.patch("/<int:user_id>/role")
+@user_bp.patch("/<string:user_id>/role")
 @super_admin_required
 def update_role(user_id):
 
@@ -142,7 +142,7 @@ def update_role(user_id):
 
     return jsonify(response), status
 
-@user_bp.patch("/<int:user_id>/activate")
+@user_bp.patch("/<string:user_id>/activate")
 @super_admin_required
 def activate_user(user_id):
 
@@ -152,7 +152,7 @@ def activate_user(user_id):
 
     return jsonify(response), status
 
-@user_bp.patch("/<int:user_id>/deactivate")
+@user_bp.patch("/<string:user_id>/deactivate")
 @super_admin_required
 def deactivate_user(user_id):
 
@@ -162,7 +162,7 @@ def deactivate_user(user_id):
 
     return jsonify(response), status
 
-@user_bp.delete("/<int:user_id>")
+@user_bp.delete("/<string:user_id>")
 @super_admin_required
 def delete_user(user_id):
 

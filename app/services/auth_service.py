@@ -40,8 +40,8 @@ class AuthService:
 
         if not user:
             return {"success": False, "message": "Invalid email or password."}, 401
-        if not verify_password(user.password_hash, data["current_password"]):
-            return {"success": False, "message": "Current password is incorrect."}, 400
+        if not verify_password(user.password_hash, data["password"]):
+            return {"success": False, "message": "Invalid email or password."}, 401
 
         access_token = generate_access_tokens(user.id)
         refresh_token = generate_refresh_tokens(user.id)
