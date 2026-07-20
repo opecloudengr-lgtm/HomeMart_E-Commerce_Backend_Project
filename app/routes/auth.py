@@ -5,6 +5,7 @@ from marshmallow import ValidationError
 from app.schemas import register_schema, login_schema
 from app.schemas import user_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from app.schemas import change_password_schema
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -43,4 +44,19 @@ def refresh_token():
 @jwt_required()
 def logout():
     response, status = AuthService.logout()
+    return jsonify(response), status
+
+@auth_bp.put("/change-password")
+@jwt_required()
+def change_password():
+
+    try:
+        data = change_password_schema.load(request.get_json())
+
+    except ValidationError as err:
+        return jsonify({"success": False, "errors": err.messages}), 400
+
+    user_id = get_jwt_identity()
+
+    response, status = AuthService.change_password(user_id, data)
     return jsonify(response), status

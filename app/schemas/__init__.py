@@ -17,3 +17,4 @@ from app.schemas.wishlist_schema import WishlistSchema, wishlists_schema, wishli
 from app.schemas.wishlist_item_schema import WishlistItemSchema, wishlist_items_schema, wishlist_item_schema
 from app.schemas.login_schema import LoginSchema, login_schema
 from app.schemas.register_schema import RegisterSchema, register_schema
+from app.schemas.change_password import (ChangePasswordSchema, change_password_schema)

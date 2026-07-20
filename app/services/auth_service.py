@@ -2,6 +2,7 @@ from app.extensions import db
 from app.models.user import User
 from app.utils.security import hash_password, verify_password
 from app.utils.token import generate_access_tokens, generate_refresh_tokens
+from app.utils.security import (hash_password, verify_password)
 
 class AuthService:
 
@@ -29,8 +30,8 @@ class AuthService:
 
         if not user:
             return {"success": False, "message": "Invalid email or password."}, 401
-        if not verify_password(user.password_hash, data["password"]):
-            return {"success": False, "message": "Invalid email or password."}, 401
+        if not verify_password(user.password_hash, data["current_password"]):
+            return {"success": False, "message": "Current password is incorrect."}, 400
 
         access_token = generate_access_tokens(user.id)
         refresh_token = generate_refresh_tokens(user.id)
@@ -45,3 +46,20 @@ class AuthService:
     @staticmethod
     def logout():
         return{"success": True, "message": "Logout successful."}, 200
+    
+    @staticmethod
+    def change_password(user_id, data):
+
+        user = User.query.get(user_id)
+
+        if not user:
+            return {"success": False, "message": "User not found."}, 404
+
+        if not verify_password(user.password_hash, data["current_password"]):
+            return {"success": False, "message": "Current password is incorrect."}, 400
+
+        user.password_hash = hash_password(data["new_password"])
+
+        db.session.commit()
+
+        return {"success": True, "message": "Password changed successfully."}, 200
