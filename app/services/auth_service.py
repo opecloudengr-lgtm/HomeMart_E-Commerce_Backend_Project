@@ -79,4 +79,40 @@ class AuthService:
         user.reset_token_expires_at = datetime.utcnow() + timedelta(hours=1)
 
         db.session.commit()
-        return {"success": True, "message": "Password reset instructions have been sent."}, 200
+        return {"success": True, "message": "Password reset instructions have been sent.", "reset_token": token}, 200
+    
+    @staticmethod
+    def reset_password(data):
+
+        user = User.query.filter_by(
+        reset_token=data["token"]
+        ).first()
+
+        if not user:
+            return {
+            "success": False,
+            "message": "Invalid reset   token."
+        }, 400
+
+        if (
+        user.reset_token_expires_at is None or
+        user.reset_token_expires_at < datetime.utcnow()
+    ):
+            return {
+            "success": False,
+            "message": "Reset token has expired."
+        }, 400
+
+        user.password = hash_password(
+        data["password"]
+    )
+
+    # Invalidate the token
+        user.reset_token = None
+        user.reset_token_expires_at = None
+
+        db.session.commit()
+        return {
+        "success": True,
+        "message": "Password reset successfully."
+    }, 200

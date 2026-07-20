@@ -7,6 +7,7 @@ from app.schemas import user_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.schemas import change_password_schema
 from app.schemas import forgot_password_schema
+from app.schemas import reset_password_schema
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -72,5 +73,25 @@ def forgot_password():
         return jsonify({"success": False, "errors": err.messages}), 400
 
     response, status = AuthService.forgot_password(data)
+
+    return jsonify(response), status
+
+@auth_bp.post("/reset-password")
+def reset_password():
+
+    try:
+        data = reset_password_schema.load(
+            request.get_json()
+        )
+
+    except ValidationError as err:
+        return jsonify(
+            {
+                "success": False,
+                "errors": err.messages
+            }
+        ), 400
+
+    response, status = AuthService.reset_password(data)
 
     return jsonify(response), status
