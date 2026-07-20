@@ -95,3 +95,20 @@ def reset_password():
     response, status = AuthService.reset_password(data)
 
     return jsonify(response), status
+
+@auth_bp.get("/verify-email")
+def verify_email():
+
+    token = request.args.get("token")
+
+    if not token:
+        return jsonify(
+            {
+                "success": False,
+                "message": "Verification token is required."
+            }
+        ), 400
+
+    response, status = AuthService.verify_email(token)
+
+    return jsonify(response), status

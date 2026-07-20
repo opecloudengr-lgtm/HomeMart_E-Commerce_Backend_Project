@@ -18,6 +18,12 @@ class AuthService:
         data["password_hash"] = hash_password(data.pop("password"))
 
         user = User(**data)
+        from datetime import datetime, timedelta
+        from app.utils.security import generate_reset_token
+
+        user.verification_token = generate_reset_token()
+
+        user.verification_token_expires_at = (datetime.utcnow() + timedelta(days=1))
         db.session.add(user)
         db.session.commit()
 
@@ -115,4 +121,38 @@ class AuthService:
         return {
         "success": True,
         "message": "Password reset successfully."
+    }, 200
+
+    @staticmethod
+    def verify_email(token):
+
+        user = User.query.filter_by(
+        verification_token=token
+    ).first()
+
+        if not user:
+            return {
+            "success": False,
+            "message": "Invalid verification token."
+        }, 400
+
+        if (
+        user.verification_token_expires_at is None or
+        user.verification_token_expires_at < datetime.utcnow()
+    ):
+            return {
+            "success": False,
+            "message": "Verification token has expired."
+        }, 400
+
+        user.is_verified = True
+
+        user.verification_token = None
+        user.verification_token_expires_at = None
+
+        db.session.commit()
+
+        return {
+        "success": True,
+        "message": "Email verified successfully."
     }, 200

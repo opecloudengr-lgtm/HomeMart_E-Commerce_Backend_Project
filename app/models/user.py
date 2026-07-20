@@ -16,6 +16,8 @@ class User(BaseModel):
     last_login = db.Column(db.DateTime, nullable=True)
     reset_token = db.Column(db.String(255), nullable=True)
     reset_token_expires_at = db.Column(db.DateTime, nullable=True)
+    verification_token = db.Column(db.String(255), nullable=True)
+    verification_token_expires_at = db.Column(db.DateTime, nullable=True)
 
     addresses = db.relationship("Address", back_populates="user", cascade="all, delete-orphan", lazy=True)
     cart = db.relationship("Cart", back_populates="user", uselist=False, cascade="all, delete-orphan")
