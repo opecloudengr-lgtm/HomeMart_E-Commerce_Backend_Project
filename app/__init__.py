@@ -2,7 +2,7 @@ from flask import Flask
 from app.config import Config
 from app.extensions import db, migrate, ma, jwt
 import app.models
-from app.routes import home_bp, address_bp, banner_bp, auth_bp, user_bp, brand_bp, cart_bp, category_bp
+from app.routes import home_bp, address_bp, banner_bp, auth_bp, user_bp, brand_bp, cart_bp, category_bp, product_bp
 
 def create_app():
     app = Flask(__name__)
@@ -21,5 +21,6 @@ def create_app():
     app.register_blueprint(brand_bp)
     app.register_blueprint(cart_bp)
     app.register_blueprint(category_bp)
+    app.register_blueprint(product_bp)
 
     return app

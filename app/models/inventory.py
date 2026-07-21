@@ -4,10 +4,10 @@ from app.extensions import db
 class Inventory(BaseModel):
     __tablename__="inventories"
 
-    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
-    quantity = db.Column(db.Integer, nullable=False, default=0)
+    product_id = db.Column(db.String(36), db.ForeignKey("products.id"), nullable=False)    
+    quantity = db.Column(db.String, nullable=False, default=0)
     price = db.Column(db.Float, nullable=False, default=0.0)
-    low_stock_threshold = db.Column(db.Integer, nullable=False, default=10)
+    low_stock_threshold = db.Column(db.String, nullable=False, default=10)
 
     product = db.relationship("Product", back_populates="inventory")
 
