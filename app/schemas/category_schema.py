@@ -5,9 +5,9 @@ from app.models.category import Category
 class CategorySchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Category
-        load_instance = True
+        load_instance = False
 
-    id = fields.Integer(dump_only=True)
+    id = fields.String(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 

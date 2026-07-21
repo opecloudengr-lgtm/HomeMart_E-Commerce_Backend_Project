@@ -5,3 +5,4 @@ from app.routes.auth import auth_bp
 from app.routes.user import user_bp
 from app.routes.brands import brand_bp
 from app.routes.cart import cart_bp
+from app.routes.category import category_bp
