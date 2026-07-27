@@ -1,478 +1,231 @@
-Absolutely. Based on everything we've built so far, here's the **complete roadmap** for HomeMart.
+# HomeMart Backend
+
+A mini e-commerce REST API built with **Flask**, **SQLAlchemy**, **Flask-Migrate**,
+**Flask-JWT-Extended**, and **Marshmallow**. It supports three roles —
+**Super Admin**, **Admin**, and **Customer** — each with their own dashboard
+and permissions.
 
 ---
 
-# ✅ Phase 1 — Project Setup (Completed)
+## 1. Project Structure
 
-* ✅ Project structure
-* ✅ Virtual environment
-* ✅ Flask application factory
-* ✅ Configuration
-* ✅ Environment variables
-* ✅ Extensions
-
-  * SQLAlchemy
-  * Marshmallow
-  * Migrate
-  * JWT
-* ✅ SQLite
-* ✅ Database migrations
-
----
-
-# ✅ Phase 2 — Database Models (Completed)
-
-* ✅ Address
-* ✅ Banner
-* ✅ Brand
-* ✅ Cart
-* ✅ CartItem
-* ✅ Category
-* ✅ Discount
-* ✅ Inventory
-* ✅ Order
-* ✅ OrderItem
-* ✅ Payment
-* ✅ Product
-* ✅ ProductImage
-* ✅ Review
-* ✅ User
-* ✅ Wishlist
-* ✅ WishlistItem
-
----
-
-# ✅ Phase 3 — Schemas (Completed)
-
-* ✅ All Marshmallow Schemas
-* ✅ Authentication Schemas
-
-  * Login
-  * Register
-  * Change Password
-  * Forgot Password
-  * Reset Password
-
----
-
-# ✅ Phase 4 — Services (Partially Completed)
-
-Completed
-
-* ✅ AddressService
-* ✅ BannerService
-* ✅ AuthService
-
-Remaining
-
-* ⏳ BrandService
-* ⏳ CartService
-* ⏳ CartItemService
-* ⏳ CategoryService
-* ⏳ DiscountService
-* ⏳ InventoryService
-* ⏳ OrderService
-* ⏳ OrderItemService
-* ⏳ PaymentService
-* ⏳ ProductService
-* ⏳ ProductImageService
-* ⏳ ReviewService
-* ⏳ UserService
-* ⏳ WishlistService
-* ⏳ WishlistItemService
-
----
-
-# ✅ Phase 5 — Routes (Partially Completed)
-
-Completed
-
-* ✅ Home
-* ✅ Address
-* ✅ Banner
-* ✅ Authentication
-
-Remaining
-
-* ⏳ Brand
-* ⏳ Cart
-* ⏳ CartItem
-* ⏳ Category
-* ⏳ Discount
-* ⏳ Inventory
-* ⏳ Order
-* ⏳ OrderItem
-* ⏳ Payment
-* ⏳ Product
-* ⏳ ProductImage
-* ⏳ Review
-* ⏳ User
-* ⏳ Wishlist
-* ⏳ WishlistItem
-
----
-
-# ✅ Phase 6 — Authentication (Completed)
-
-* ✅ Register
-* ✅ Login
-* ✅ Profile
-* ✅ Refresh Token
-* ✅ Logout
-* ✅ Forgot Password
-* ✅ Reset Password
-* ✅ Change Password
-* ✅ Email Verification
-* ✅ JWT
-* ✅ Password Hashing
-
----
-
-# Phase 7 — Authorization (Remaining)
-
-We haven't implemented authorization yet.
-
-## Roles
-
-```text
-Admin
-
-Customer
-
-Super Admin
 ```
-
-Need to build:
-
-* ⏳ Role checking
-* ⏳ Admin decorator
-* ⏳ Super Admin decorator
-* ⏳ Owner-only resources
-* ⏳ Permission management
-
----
-
-# Phase 8 — Product Module
-
-Still needs business logic.
-
-## Product APIs
-
-* ⏳ Create Product
-* ⏳ Update Product
-* ⏳ Delete Product
-* ⏳ Get Product
-* ⏳ Get Products
-* ⏳ Search Products
-* ⏳ Filter Products
-* ⏳ Product Pagination
-
----
-
-# Phase 9 — Category Module
-
-* ⏳ CRUD
-* ⏳ Product count
-* ⏳ Nested categories (optional)
-
----
-
-# Phase 10 — Brand Module
-
-* ⏳ CRUD
-
----
-
-# Phase 11 — Banner Module
-
-We only built the basic CRUD.
-
-Remaining
-
-* ⏳ Upload banner image
-* ⏳ Activate/Deactivate banner
-* ⏳ Sort banners
-
----
-
-# Phase 12 — Inventory Module
-
-Remaining
-
-* ⏳ Stock Increase
-* ⏳ Stock Reduction
-* ⏳ Low Stock Alert
-* ⏳ Out of Stock
-* ⏳ Inventory History
-
----
-
-# Phase 13 — Cart Module
-
-Need
-
-* ⏳ Add Item
-* ⏳ Remove Item
-* ⏳ Update Quantity
-* ⏳ Empty Cart
-* ⏳ Cart Total
-* ⏳ Cart Summary
-
----
-
-# Phase 14 — Wishlist Module
-
-Need
-
-* ⏳ Add Item
-* ⏳ Remove Item
-* ⏳ Move To Cart
-
----
-
-# Phase 15 — Order Module
-
-Need
-
-* ⏳ Checkout
-* ⏳ Create Order
-* ⏳ Cancel Order
-* ⏳ Order Status
-* ⏳ Order History
-* ⏳ Order Tracking
-
----
-
-# Phase 16 — Payment Module
-
-Need
-
-* ⏳ Initialize Payment
-* ⏳ Verify Payment
-* ⏳ Payment Callback
-* ⏳ Refund
-
-Future integrations:
-
-* Paystack
-* Flutterwave
-* Monnify
-* Stripe
-
----
-
-# Phase 17 — Reviews
-
-Need
-
-* ⏳ Add Review
-* ⏳ Edit Review
-* ⏳ Delete Review
-* ⏳ Rating Average
-
----
-
-# Phase 18 — Image Upload
-
-Need
-
-* ⏳ Product Images
-* ⏳ Banner Images
-* ⏳ User Avatar
-* ⏳ Brand Logo
-
-Storage
-
-* Local Storage
-* AWS S3
-* Cloudinary
-
----
-
-# Phase 19 — Validation
-
-Need
-
-* ⏳ Custom Validators
-* ⏳ Phone Validation
-* ⏳ Password Strength
-* ⏳ Image Validation
-
----
-
-# Phase 20 — Responses
-
-Need standardized API responses.
-
-Instead of writing:
-
-```python
-return jsonify(...)
-```
-
-We'll create helpers like:
-
-```python
-success_response()
-
-error_response()
-
-created_response()
-
-not_found_response()
-
-validation_error_response()
+homemart/
+├── app/
+│   ├── __init__.py          # App factory: builds & configures the Flask app
+│   ├── extensions.py        # Shared extension instances (db, jwt, ma, migrate)
+│   ├── models/               # Database tables (SQLAlchemy models)
+│   │   ├── user.py           # Users: super_admin / admin / customer
+│   │   ├── category.py       # Product categories
+│   │   ├── product.py        # Products
+│   │   ├── cart.py           # Cart items
+│   │   ├── wishlist.py       # Wishlist items
+│   │   ├── order.py          # Orders + order items
+│   │   └── payment.py        # Payments (mock gateway)
+│   ├── schemas/               # Marshmallow schemas (model <-> JSON)
+│   ├── routes/                 # All API endpoints, grouped by feature
+│   │   ├── auth_routes.py        # Register / login / refresh / profile
+│   │   ├── superadmin_routes.py  # Super admin dashboard + manage admins/categories
+│   │   ├── admin_routes.py       # Admin dashboard + manage products/orders
+│   │   ├── customer_routes.py    # Customer dashboard
+│   │   ├── product_routes.py     # Public product browsing
+│   │   ├── cart_routes.py        # Cart actions
+│   │   ├── wishlist_routes.py    # Wishlist actions
+│   │   ├── order_routes.py       # Checkout + order history
+│   │   └── payment_routes.py     # Mock payment
+│   └── utils/
+│       └── decorators.py     # @role_required() access-control decorator
+├── config.py                 # App configuration (reads from .env)
+├── run.py                    # Starts the dev server
+├── seed.py                   # Creates the FIRST super admin account
+├── requirements.txt
+└── .env.example               # Copy to .env and fill in your own secrets
 ```
 
 ---
 
-# Phase 21 — Pagination
+## 2. How the 3 Roles Work
 
-Need reusable pagination for
+All users live in ONE `users` table with a `role` column:
 
-* Products
-* Orders
-* Reviews
-* Users
+| Role         | Created by                              | Can do |
+|--------------|------------------------------------------|--------|
+| `super_admin`| `seed.py` (only once, directly on server) | Create/manage admins, manage categories, see store-wide dashboard |
+| `admin`      | An existing super admin (via API)         | Create/manage products, view & update orders, see admin dashboard |
+| `customer`   | Public `/api/auth/register` endpoint      | Browse, cart, wishlist, checkout, pay, see personal dashboard |
 
----
-
-# Phase 22 — Searching
-
-Need
-
-* Product Search
-* Brand Search
-* Category Search
-* Order Search
-* Customer Search
+Every protected route is locked down with a `@role_required("role_name")`
+decorator (see `app/utils/decorators.py`), so a customer token can never
+call an admin-only endpoint, etc.
 
 ---
 
-# Phase 23 — Filtering
+## 3. Setup Instructions
 
-Need
+```bash
+# 1. Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
 
-* Price
-* Category
-* Brand
-* Rating
-* Availability
+# 2. Install dependencies
+pip install -r requirements.txt
 
----
+# 3. Create your .env file
+cp .env.example .env
+# then open .env and change the secret keys / super admin password
 
-# Phase 24 — Sorting
+# 4. Initialize the database
+flask --app run.py db init
+flask --app run.py db migrate -m "initial tables"
+flask --app run.py db upgrade
 
-Need
+# 5. Create the first Super Admin account
+python seed.py
 
-* Latest
-* Oldest
-* Highest Price
-* Lowest Price
-* Highest Rating
-* Most Popular
+# 6. Start the server
+python run.py
+```
 
----
-
-# Phase 25 — Admin Dashboard APIs
-
-Need
-
-* ⏳ Dashboard Statistics
-* ⏳ Sales
-* ⏳ Revenue
-* ⏳ Orders
-* ⏳ Customers
-* ⏳ Products
-* ⏳ Inventory
-* ⏳ Reports
+The API will be running at `http://127.0.0.1:5000`.
 
 ---
 
-# Phase 26 — Logging
+## 4. Authentication
 
-Need
+Every protected endpoint expects a header:
 
-* Error Logging
-* Activity Logging
-* Authentication Logs
-* Order Logs
+```
+Authorization: Bearer <your_access_token>
+```
 
----
-
-# Phase 27 — Testing
-
-Need
-
-* Unit Tests
-* Integration Tests
-* API Tests
+You get `access_token` (and `refresh_token`) back from `POST /api/auth/login`.
+Access tokens expire after 1 hour — use `POST /api/auth/refresh` with your
+refresh token to get a new one without logging in again.
 
 ---
 
-# Phase 28 — Documentation
+## 5. Full Endpoint Reference
 
-Need
+### Auth (public)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/auth/register` | Create a customer account |
+| POST | `/api/auth/login` | Log in (any role) |
+| POST | `/api/auth/refresh` | Get a new access token |
+| GET  | `/api/auth/me` | Get your own profile |
 
-* Swagger/OpenAPI
-* Postman Collection
-* README
-* API Documentation
+### Products & Categories (public — no login needed)
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/products` | Browse products (filters: `category_id`, `search`, `min_price`, `max_price`) |
+| GET | `/api/products/<id>` | View one product |
+| GET | `/api/products/categories` | List categories |
+
+### Cart (customer only)
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/cart` | View your cart |
+| POST | `/api/cart/add` | Add a product `{product_id, quantity}` |
+| PATCH | `/api/cart/<item_id>` | Update quantity `{quantity}` |
+| DELETE | `/api/cart/<item_id>` | Remove item |
+
+### Wishlist (customer only)
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/wishlist` | View your wishlist |
+| POST | `/api/wishlist/add` | Add a product `{product_id}` |
+| DELETE | `/api/wishlist/<item_id>` | Remove item |
+| POST | `/api/wishlist/<item_id>/move-to-cart` | Move item into your cart |
+
+### Orders & Checkout (customer only)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/orders/checkout` | Turn your cart into an order `{shipping_address}` |
+| GET | `/api/orders` | View your order history |
+| GET | `/api/orders/<id>` | View one order in detail |
+
+### Payment (customer only — mock gateway)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/payments/pay/<order_id>` | Pay for a pending order `{method}` |
+| GET | `/api/payments/<order_id>` | View payment/receipt for an order |
+
+### Admin Dashboard (admin only)
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/admin/dashboard` | Admin stats: products, low stock, orders |
+| POST | `/api/admin/products` | Create a product |
+| PUT | `/api/admin/products/<id>` | Edit a product |
+| DELETE | `/api/admin/products/<id>` | Deactivate a product |
+| GET | `/api/admin/products` | List all products (incl. inactive) |
+| GET | `/api/admin/orders` | View every customer order |
+| PATCH | `/api/admin/orders/<id>/status` | Update order status `{status}` |
+
+### Super Admin Dashboard (super admin only)
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/superadmin/dashboard` | Store-wide stats + revenue |
+| POST | `/api/superadmin/admins` | Create a new admin |
+| GET | `/api/superadmin/admins` | List all admins |
+| PATCH | `/api/superadmin/admins/<id>/toggle-active` | Activate/deactivate an admin |
+| GET | `/api/superadmin/users` | List every user in the system |
+| POST | `/api/superadmin/categories` | Create a category |
+| DELETE | `/api/superadmin/categories/<id>` | Delete a category |
+
+### Customer Dashboard (customer only)
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/customer/dashboard` | Cart/wishlist counts, order totals, recent orders |
 
 ---
 
-# Phase 29 — Deployment
+## 6. Example Flow (using curl)
 
-Need
+```bash
+# 1. Register a customer
+curl -X POST http://127.0.0.1:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Jane Doe","email":"jane@example.com","password":"Passw0rd!"}'
 
-* Docker
-* Gunicorn
-* Nginx
-* CI/CD
-* Environment Configuration
+# 2. Log in
+curl -X POST http://127.0.0.1:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"jane@example.com","password":"Passw0rd!"}'
+# copy the "access_token" from the response
+
+# 3. Browse products
+curl http://127.0.0.1:5000/api/products
+
+# 4. Add a product to cart (replace TOKEN and product_id)
+curl -X POST http://127.0.0.1:5000/api/cart/add \
+  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
+  -d '{"product_id": 1, "quantity": 2}'
+
+# 5. Checkout
+curl -X POST http://127.0.0.1:5000/api/orders/checkout \
+  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
+  -d '{"shipping_address": "12 Allen Avenue, Ikeja, Lagos"}'
+
+# 6. Pay for the order (replace order_id)
+curl -X POST http://127.0.0.1:5000/api/payments/pay/1 \
+  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
+  -d '{"method": "card"}'
+```
 
 ---
 
-# Phase 30 — Production Improvements
+## 7. Notes on Design Decisions
 
-Need
-
-* Redis Caching
-* Rate Limiting
-* Background Tasks (Celery/RQ)
-* Email Queue
-* Monitoring
-* Security Headers
-* CORS Configuration
-* Backup Strategy
-
----
-
-# Overall Progress
-
-| Phase          | Status  |
-| -------------- | ------- |
-| Project Setup  | ✅ 100%  |
-| Models         | ✅ 100%  |
-| Schemas        | ✅ 100%  |
-| Authentication | ✅ 100%  |
-| Services       | 🟡 ~20% |
-| Routes         | 🟡 ~20% |
-| Business Logic | 🟡 ~15% |
-| Admin Features | ❌ 0%    |
-| Testing        | ❌ 0%    |
-| Documentation  | ❌ 0%    |
-| Deployment     | ❌ 0%    |
-
-## Recommended Development Order
-
-To build HomeMart in a logical, production-ready sequence, I'd recommend:
-
-1. **Finish all remaining services** (Brand, Category, Product, Cart, Order, etc.).
-2. **Build all remaining routes** using those services.
-3. **Implement authorization** (roles and permissions) so admin-only operations are protected.
-4. **Complete business features** such as search, filtering, sorting, pagination, inventory management, and checkout.
-5. **Add image uploads and payment gateway integration.**
-6. **Write tests**, generate API documentation, and prepare the application for deployment.
-
-Following this order keeps the foundation solid before adding advanced capabilities.
+- **One `users` table, one `role` column** — simpler than 3 separate
+  tables since all account types share the same core fields.
+- **Prices stored as `Numeric`, not `Float`** — avoids floating-point
+  rounding errors with money.
+- **Order items snapshot the price at purchase time** — so a later price
+  change by an admin never rewrites a customer's past receipt.
+- **Products are soft-deleted** (`is_active=False`), never hard-deleted —
+  keeps old orders valid and intact.
+- **Payment is mocked** — swap the logic inside `pay_for_order()` in
+  `payment_routes.py` for a real gateway (Stripe/Paystack/Flutterwave)
+  when you're ready to go live; nothing else needs to change.
+- **Super admins are never created via a public endpoint** — only through
+  `seed.py`, run directly on the server, to prevent privilege escalation.

@@ -1,18 +1,14 @@
-from app.mixins import BaseModel
 from app.extensions import db
 
-class Category(BaseModel):
-    __tablename__="categories"
 
-    name = db.Column(db.String(100), unique=True, nullable=False, index=True)
-    description= db.Column(db.Text, nullable=True)
-    image_url = db.Column(db.String(255), nullable=True)
-    is_active = db.Column(db.Boolean, default=True, nullable=False)
+class Category(db.Model):
+    __tablename__ = "categories"
 
-    products = db.relationship(
-    "Product",
-    back_populates="category",
-    lazy=True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
+    description = db.Column(db.String(255), nullable=True)
+
+    products = db.relationship("Product", backref="category", lazy=True)
 
     def __repr__(self):
-        return f"<Category {self.id}: {self.name}>"
+        return f"<Category {self.name}>"

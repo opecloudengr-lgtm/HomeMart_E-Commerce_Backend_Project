@@ -1,13 +1,17 @@
-from app.mixins import BaseModel
+from datetime import datetime, timezone
 from app.extensions import db
 
-class Wishlist(BaseModel):
-    __tablename__="wishlist"
 
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, unique=True)
+class WishlistItem(db.Model):
+    __tablename__ = "wishlist_items"
 
-    user = db.relationship("User", back_populates="wishlist")
-    wishlist_items = db.relationship("WishlistItem", back_populates="wishlist", cascade="all, delete-orphan", lazy=True)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
+    added_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
-    def __repr__(self):
-        return f"<Wishlist User ID: {self.user_id}>"
+    product = db.relationship("Product")
+
+    __table_args__ = (
+        db.UniqueConstraint("user_id", "product_id", name="unique_user_product_wishlist"),
+    )
