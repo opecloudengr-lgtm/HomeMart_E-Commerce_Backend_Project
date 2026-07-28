@@ -5,3 +5,5 @@ from app.models.cart import CartItem
 from app.models.wishlist import WishlistItem
 from app.models.order import Order, OrderItem, OrderStatus
 from app.models.payment import Payment, PaymentStatus
+from app.models.otp import Otp, OtpPurpose
+from app.models.token_blocklist import TokenBlocklist

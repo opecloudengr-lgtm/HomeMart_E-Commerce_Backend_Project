@@ -72,7 +72,6 @@ def list_all_products_for_admin():
     products = Product.query.order_by(Product.created_at.desc()).all()
     return jsonify(products_schema.dump(products)), 200
 
-
 # ---------------------------------------------------------------------
 # ORDER MANAGEMENT
 # ---------------------------------------------------------------------

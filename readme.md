@@ -24,7 +24,7 @@ homemart/
 │   │   └── payment.py        # Payments (mock gateway)
 │   ├── schemas/               # Marshmallow schemas (model <-> JSON)
 │   ├── routes/                 # All API endpoints, grouped by feature
-│   │   ├── auth_routes.py        # Register / login / refresh / profile
+│   │   ├── auth_routes.py        # Register / login / refresh / me
 │   │   ├── superadmin_routes.py  # Super admin dashboard + manage admins/categories
 │   │   ├── admin_routes.py       # Admin dashboard + manage products/orders
 │   │   ├── customer_routes.py    # Customer dashboard
@@ -52,7 +52,7 @@ All users live in ONE `users` table with a `role` column:
 |--------------|------------------------------------------|--------|
 | `super_admin`| `seed.py` (only once, directly on server) | Create/manage admins, manage categories, see store-wide dashboard |
 | `admin`      | An existing super admin (via API)         | Create/manage products, view & update orders, see admin dashboard |
-| `customer`   | Public `/api/auth/register` endpoint      | Browse, cart, wishlist, checkout, pay, see personal dashboard |
+| `customer`   | Public `/auth/register` endpoint      | Browse, cart, wishlist, checkout, pay, see personal dashboard |
 
 Every protected route is locked down with a `@role_required("role_name")`
 decorator (see `app/utils/decorators.py`), so a customer token can never
@@ -98,8 +98,8 @@ Every protected endpoint expects a header:
 Authorization: Bearer <your_access_token>
 ```
 
-You get `access_token` (and `refresh_token`) back from `POST /api/auth/login`.
-Access tokens expire after 1 hour — use `POST /api/auth/refresh` with your
+You get `access_token` (and `refresh_token`) back from `POST /auth/login`.
+Access tokens expire after 1 hour — use `POST /auth/refresh` with your
 refresh token to get a new one without logging in again.
 
 ---
@@ -109,112 +109,163 @@ refresh token to get a new one without logging in again.
 ### Auth (public)
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/auth/register` | Create a customer account |
-| POST | `/api/auth/login` | Log in (any role) |
-| POST | `/api/auth/refresh` | Get a new access token |
-| GET  | `/api/auth/me` | Get your own profile |
+| POST | `/auth/register` | Create a customer account (auto-sends an email-verification OTP) |
+| POST | `/auth/login` | Log in (any role) |
+| POST | `/auth/refresh` | Get a new access token |
+| GET  | `/auth/me` | Get your own profile |
+| POST | `/auth/send-otp` | Send/resend an OTP `{email, purpose}` — purpose is `email_verification` or `password_reset` |
+| POST | `/auth/verify-email` | Confirm email with the OTP `{email, otp}` |
+| POST | `/auth/reset-password` | Reset password with the OTP `{email, otp, new_password}` |
+| POST | `/auth/logout` | Revoke your current access token (requires `Authorization` header) |
+| POST | `/auth/logout-refresh` | Revoke your refresh token (send it as the Bearer token) |
 
 ### Products & Categories (public — no login needed)
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/products` | Browse products (filters: `category_id`, `search`, `min_price`, `max_price`) |
-| GET | `/api/products/<id>` | View one product |
-| GET | `/api/products/categories` | List categories |
+| GET | `/products` | Browse products (filters: `category_id`, `search`, `min_price`, `max_price`) |
+| GET | `/products/<id>` | View one product |
+| GET | `/products/categories` | List categories |
 
 ### Cart (customer only)
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/cart` | View your cart |
-| POST | `/api/cart/add` | Add a product `{product_id, quantity}` |
-| PATCH | `/api/cart/<item_id>` | Update quantity `{quantity}` |
-| DELETE | `/api/cart/<item_id>` | Remove item |
+| GET | `/cart` | View your cart |
+| POST | `/cart/add` | Add a product `{product_id, quantity}` |
+| PATCH | `/cart/<item_id>` | Update quantity `{quantity}` |
+| DELETE | `/cart/<item_id>` | Remove item |
 
 ### Wishlist (customer only)
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/wishlist` | View your wishlist |
-| POST | `/api/wishlist/add` | Add a product `{product_id}` |
-| DELETE | `/api/wishlist/<item_id>` | Remove item |
-| POST | `/api/wishlist/<item_id>/move-to-cart` | Move item into your cart |
+| GET | `/wishlist` | View your wishlist |
+| POST | `/wishlist/add` | Add a product `{product_id}` |
+| DELETE | `/wishlist/<item_id>` | Remove item |
+| POST | `/wishlist/<item_id>/move-to-cart` | Move item into your cart |
 
 ### Orders & Checkout (customer only)
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/orders/checkout` | Turn your cart into an order `{shipping_address}` |
-| GET | `/api/orders` | View your order history |
-| GET | `/api/orders/<id>` | View one order in detail |
+| POST | `/orders/checkout` | Turn your cart into an order `{shipping_address}` |
+| GET | `/orders` | View your order history |
+| GET | `/orders/<id>` | View one order in detail |
 
 ### Payment (customer only — mock gateway)
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/payments/pay/<order_id>` | Pay for a pending order `{method}` |
-| GET | `/api/payments/<order_id>` | View payment/receipt for an order |
+| POST | `/payments/pay/<order_id>` | Pay for a pending order `{method}` |
+| GET | `/payments/<order_id>` | View payment/receipt for an order |
 
 ### Admin Dashboard (admin only)
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/admin/dashboard` | Admin stats: products, low stock, orders |
-| POST | `/api/admin/products` | Create a product |
-| PUT | `/api/admin/products/<id>` | Edit a product |
-| DELETE | `/api/admin/products/<id>` | Deactivate a product |
-| GET | `/api/admin/products` | List all products (incl. inactive) |
-| GET | `/api/admin/orders` | View every customer order |
-| PATCH | `/api/admin/orders/<id>/status` | Update order status `{status}` |
+| GET | `/admin/dashboard` | Admin stats: products, low stock, orders |
+| POST | `/admin/products` | Create a product |
+| PUT | `/admin/products/<id>` | Edit a product |
+| DELETE | `/admin/products/<id>` | Deactivate a product |
+| GET | `/admin/products` | List all products (incl. inactive) |
+| GET | `/admin/orders` | View every customer order |
+| PATCH | `/admin/orders/<id>/status` | Update order status `{status}` |
 
 ### Super Admin Dashboard (super admin only)
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/superadmin/dashboard` | Store-wide stats + revenue |
-| POST | `/api/superadmin/admins` | Create a new admin |
-| GET | `/api/superadmin/admins` | List all admins |
-| PATCH | `/api/superadmin/admins/<id>/toggle-active` | Activate/deactivate an admin |
-| GET | `/api/superadmin/users` | List every user in the system |
-| POST | `/api/superadmin/categories` | Create a category |
-| DELETE | `/api/superadmin/categories/<id>` | Delete a category |
+| GET | `/superadmin/dashboard` | Store-wide stats + revenue |
+| POST | `/superadmin/admins` | Create a new admin |
+| GET | `/superadmin/admins` | List all admins |
+| PATCH | `/superadmin/admins/<id>/toggle-active` | Activate/deactivate an admin |
+| GET | `/superadmin/users` | List every user in the system |
+| POST | `/superadmin/categories` | Create a category |
+| DELETE | `/superadmin/categories/<id>` | Delete a category |
 
 ### Customer Dashboard (customer only)
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/customer/dashboard` | Cart/wishlist counts, order totals, recent orders |
+| GET | `/customer/dashboard` | Cart/wishlist counts, order totals, recent orders |
 
 ---
 
-## 6. Example Flow (using curl)
+## 6. Mock Email OTP & Logout
+
+**OTP (One-Time-Passcode):** There's no real email provider wired in
+(nothing like Flask-Mail/SendGrid is in `requirements.txt`), so
+"sending" an email is mocked in `app/utils/mailer.py` — it just prints
+the code to your terminal, e.g.:
+
+```
+==================================================
+📧  MOCK EMAIL SENT (no real email was sent)
+To:      jane@example.com
+Subject: Verify your HomeMart email
+Body:    Your HomeMart OTP code is: 048213
+         This code expires in 10 minutes.
+==================================================
+```
+
+Copy that code from your terminal and use it with `/auth/verify-email`
+or `/auth/reset-password`. To go live later, only the inside of
+`send_otp_email()` needs to change — swap the `print()` calls for a real
+API call to your email provider.
+
+- **Verify email after registering:** `POST /auth/register` ->
+  check your terminal for the code -> `POST /auth/verify-email`
+- **Forgot password:** `POST /auth/send-otp` with
+  `{"email": "...", "purpose": "password_reset"}` -> check terminal ->
+  `POST /auth/reset-password` with the code + new password
+
+**Logout:** JWTs are normally stateless (they stay valid until they
+expire even if you "log out"). To make logout actually invalidate a
+token immediately, `POST /auth/logout` stores that token's unique
+ID in a `token_blocklist` table; every future request checks that table
+first (see `app/__init__.py`), so a blocklisted token is rejected even
+though it hasn't technically expired yet.
+
+---
+
+## 7. Example Flow (using curl)
 
 ```bash
 # 1. Register a customer
-curl -X POST http://127.0.0.1:5000/api/auth/register \
+curl -X POST http://127.0.0.1:5000/auth/register \
   -H "Content-Type: application/json" \
   -d '{"name":"Jane Doe","email":"jane@example.com","password":"Passw0rd!"}'
 
 # 2. Log in
-curl -X POST http://127.0.0.1:5000/api/auth/login \
+curl -X POST http://127.0.0.1:5000/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"jane@example.com","password":"Passw0rd!"}'
 # copy the "access_token" from the response
 
 # 3. Browse products
-curl http://127.0.0.1:5000/api/products
+curl http://127.0.0.1:5000/products
 
 # 4. Add a product to cart (replace TOKEN and product_id)
-curl -X POST http://127.0.0.1:5000/api/cart/add \
+curl -X POST http://127.0.0.1:5000/cart/add \
   -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
   -d '{"product_id": 1, "quantity": 2}'
 
 # 5. Checkout
-curl -X POST http://127.0.0.1:5000/api/orders/checkout \
+curl -X POST http://127.0.0.1:5000/orders/checkout \
   -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
   -d '{"shipping_address": "12 Allen Avenue, Ikeja, Lagos"}'
 
 # 6. Pay for the order (replace order_id)
-curl -X POST http://127.0.0.1:5000/api/payments/pay/1 \
+curl -X POST http://127.0.0.1:5000/payments/pay/1 \
   -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
   -d '{"method": "card"}'
+
+# 7. Verify your email (copy the code printed in your server terminal)
+curl -X POST http://127.0.0.1:5000/auth/verify-email \
+  -H "Content-Type: application/json" \
+  -d '{"email": "jane@example.com", "otp": "048213"}'
+
+# 8. Log out (revokes the access token you're sending)
+curl -X POST http://127.0.0.1:5000/auth/logout \
+  -H "Authorization: Bearer TOKEN"
 ```
 
 ---
 
-## 7. Notes on Design Decisions
+## 8. Notes on Design Decisions
 
 - **One `users` table, one `role` column** — simpler than 3 separate
   tables since all account types share the same core fields.
@@ -229,3 +280,14 @@ curl -X POST http://127.0.0.1:5000/api/payments/pay/1 \
   when you're ready to go live; nothing else needs to change.
 - **Super admins are never created via a public endpoint** — only through
   `seed.py`, run directly on the server, to prevent privilege escalation.
+- **OTPs are single-use and time-limited** (10 minutes) — each `Otp` row
+  has an `is_used` flag and `expires_at`, so a code can't be replayed or
+  used after it goes stale.
+- **`/send-otp` gives the same response whether or not the email exists**
+  — this stops the endpoint being used to check which emails are
+  registered on the platform (a common security leak in "forgot
+  password" flows).
+- **Logout uses a token blocklist, not just deleting the token
+  client-side** — deleting a token on the frontend doesn't stop someone
+  who already copied it from still using it; the server-side blocklist
+  actually revokes it.
