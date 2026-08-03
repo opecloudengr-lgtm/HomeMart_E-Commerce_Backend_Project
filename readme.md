@@ -1,6 +1,6 @@
 # HomeMart Backend
 
-A mini e-commerce REST API built with **Flask**, **SQLAlchemy**, **Flask-Migrate**,
+A mini e-commerce REST API built with **Flask*, **SQLAlchemy**, **Flask-Migrate**,
 **Flask-JWT-Extended**, and **Marshmallow**. It supports three roles —
 **Super Admin**, **Admin**, and **Customer** — each with their own dashboard
 and permissions.
@@ -221,73 +221,869 @@ though it hasn't technically expired yet.
 
 ---
 
-## 7. Example Flow (using curl)
+That's the correct approach. Test the API in the same order a real e-commerce system would be used.
 
-```bash
-# 1. Register a customer
-curl -X POST http://127.0.0.1:5000/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Jane Doe","email":"jane@example.com","password":"Passw0rd!"}'
+The flow should be:
 
-# 2. Log in
-curl -X POST http://127.0.0.1:5000/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"jane@example.com","password":"Passw0rd!"}'
-# copy the "access_token" from the response
+1. **Super Admin** → Create categories and admins.
+2. **Admin** → Create products.
+3. **Customer 1** → Register, verify email, shop, checkout, pay.
+4. **Customer 2** → Register, verify email, shop.
+5. Test authentication, refresh tokens, logout, authorization, and error cases.
 
-# 3. Browse products
-curl http://127.0.0.1:5000/products
+---
 
-# 4. Add a product to cart (replace TOKEN and product_id)
-curl -X POST http://127.0.0.1:5000/cart/add \
-  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
-  -d '{"product_id": 1, "quantity": 2}'
+# SESSION 1 — SUPER ADMIN
 
-# 5. Checkout
-curl -X POST http://127.0.0.1:5000/orders/checkout \
-  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
-  -d '{"shipping_address": "12 Allen Avenue, Ikeja, Lagos"}'
+> The Super Admin account is assumed to already exist from `seed.py`.
 
-# 6. Pay for the order (replace order_id)
-curl -X POST http://127.0.0.1:5000/payments/pay/1 \
-  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" \
-  -d '{"method": "card"}'
+## 1. Login
 
-# 7. Verify your email (copy the code printed in your server terminal)
-curl -X POST http://127.0.0.1:5000/auth/verify-email \
-  -H "Content-Type: application/json" \
-  -d '{"email": "jane@example.com", "otp": "048213"}'
+**POST**
 
-# 8. Log out (revokes the access token you're sending)
-curl -X POST http://127.0.0.1:5000/auth/logout \
-  -H "Authorization: Bearer TOKEN"
+```
+http://127.0.0.1:5000/auth/login
+```
+
+Body
+
+```json
+{
+    "email": "superadmin@homemart.com",
+    "password": "SuperAdmin123!"
+}
+```
+
+Save
+
+```
+access_token
+refresh_token
 ```
 
 ---
 
-## 8. Notes on Design Decisions
+## 2. Get Profile
 
-- **One `users` table, one `role` column** — simpler than 3 separate
-  tables since all account types share the same core fields.
-- **Prices stored as `Numeric`, not `Float`** — avoids floating-point
-  rounding errors with money.
-- **Order items snapshot the price at purchase time** — so a later price
-  change by an admin never rewrites a customer's past receipt.
-- **Products are soft-deleted** (`is_active=False`), never hard-deleted —
-  keeps old orders valid and intact.
-- **Payment is mocked** — swap the logic inside `pay_for_order()` in
-  `payment_routes.py` for a real gateway (Stripe/Paystack/Flutterwave)
-  when you're ready to go live; nothing else needs to change.
-- **Super admins are never created via a public endpoint** — only through
-  `seed.py`, run directly on the server, to prevent privilege escalation.
-- **OTPs are single-use and time-limited** (10 minutes) — each `Otp` row
-  has an `is_used` flag and `expires_at`, so a code can't be replayed or
-  used after it goes stale.
-- **`/send-otp` gives the same response whether or not the email exists**
-  — this stops the endpoint being used to check which emails are
-  registered on the platform (a common security leak in "forgot
-  password" flows).
-- **Logout uses a token blocklist, not just deleting the token
-  client-side** — deleting a token on the frontend doesn't stop someone
-  who already copied it from still using it; the server-side blocklist
-  actually revokes it.
+**GET**
+
+```
+http://127.0.0.1:5000/auth/me
+```
+
+Headers
+
+```
+Authorization: Bearer SUPER_ADMIN_ACCESS_TOKEN
+```
+
+---
+
+## 3. Dashboard
+
+**GET**
+
+```
+http://127.0.0.1:5000/superadmin/dashboard
+```
+
+Headers
+
+```
+Authorization: Bearer SUPER_ADMIN_ACCESS_TOKEN
+```
+
+---
+
+## 4. Create Categories
+
+### Electronics
+
+**POST**
+
+```
+http://127.0.0.1:5000/superadmin/categories
+```
+
+Headers
+
+```
+Authorization: Bearer SUPER_ADMIN_ACCESS_TOKEN
+```
+
+Body
+
+```json
+{
+    "name": "Electronics"
+}
+```
+
+---
+
+### Fashion
+
+```json
+{
+    "name": "Fashion"
+}
+```
+
+---
+
+### Groceries
+
+```json
+{
+    "name": "Groceries"
+}
+```
+
+---
+
+### Furniture
+
+```json
+{
+    "name": "Furniture"
+}
+```
+
+---
+
+### Phones
+
+```json
+{
+    "name": "Phones"
+}
+```
+
+---
+
+## 5. Create Admin
+
+**POST**
+
+```
+http://127.0.0.1:5000/superadmin/admins
+```
+
+Headers
+
+```
+Authorization: Bearer SUPER_ADMIN_ACCESS_TOKEN
+```
+
+Body
+
+```json
+{
+    "name": "John Admin",
+    "email": "admin@homemart.com",
+    "password": "Admin123!"
+}
+```
+
+---
+
+## 6. View All Admins
+
+**GET**
+
+```
+http://127.0.0.1:5000/superadmin/admins
+```
+
+---
+
+## 7. View Users
+
+**GET**
+
+```
+http://127.0.0.1:5000/superadmin/users
+```
+
+---
+
+## 8. Refresh Token
+
+**POST**
+
+```
+http://127.0.0.1:5000/auth/refresh
+```
+
+Headers
+
+```
+Authorization: Bearer SUPER_ADMIN_REFRESH_TOKEN
+```
+
+---
+
+## 9. Logout
+
+**POST**
+
+```
+http://127.0.0.1:5000/auth/logout
+```
+
+Headers
+
+```
+Authorization: Bearer SUPER_ADMIN_ACCESS_TOKEN
+```
+
+---
+
+# SESSION 2 — ADMIN
+
+---
+
+## 1. Login
+
+**POST**
+
+```
+http://127.0.0.1:5000/auth/login
+```
+
+Body
+
+```json
+{
+    "email": "admin@homemart.com",
+    "password": "Admin123!"
+}
+```
+
+---
+
+## 2. Dashboard
+
+**GET**
+
+```
+http://127.0.0.1:5000/admin/dashboard
+```
+
+Headers
+
+```
+Authorization: Bearer ADMIN_ACCESS_TOKEN
+```
+
+---
+
+# Create Products
+
+Use the category IDs created earlier.
+
+---
+
+## Product 1
+
+**POST**
+
+```
+http://127.0.0.1:5000/admin/products
+```
+
+```json
+{
+    "name": "iPhone 15 Pro",
+    "description": "Apple flagship smartphone",
+    "price": 1200,
+    "stock": 15,
+    "category_id": 5
+}
+```
+
+---
+
+## Product 2
+
+```json
+{
+    "name": "Samsung Galaxy S25",
+    "description": "Android flagship",
+    "price": 950,
+    "stock": 20,
+    "category_id": 5
+}
+```
+
+---
+
+## Product 3
+
+```json
+{
+    "name": "Dell XPS 15",
+    "description": "High-performance laptop",
+    "price": 1800,
+    "stock": 10,
+    "category_id": 1
+}
+```
+
+---
+
+## Product 4
+
+```json
+{
+    "name": "Sony WH-1000XM6",
+    "description": "Noise cancelling headphones",
+    "price": 399,
+    "stock": 30,
+    "category_id": 1
+}
+```
+
+---
+
+## Product 5
+
+```json
+{
+    "name": "Nike Air Max",
+    "description": "Running shoes",
+    "price": 180,
+    "stock": 40,
+    "category_id": 2
+}
+```
+
+---
+
+## Product 6
+
+```json
+{
+    "name": "Office Chair",
+    "description": "Ergonomic office chair",
+    "price": 250,
+    "stock": 12,
+    "category_id": 4
+}
+```
+
+---
+
+## Product 7
+
+```json
+{
+    "name": "Dining Table",
+    "description": "6-Seater Wooden Table",
+    "price": 650,
+    "stock": 8,
+    "category_id": 4
+}
+```
+
+---
+
+## Product 8
+
+```json
+{
+    "name": "Rice 50kg",
+    "description": "Premium long grain rice",
+    "price": 95,
+    "stock": 50,
+    "category_id": 3
+}
+```
+
+---
+
+## View Products
+
+**GET**
+
+```
+http://127.0.0.1:5000/admin/products
+```
+
+---
+
+## Update Product
+
+**PUT**
+
+```
+http://127.0.0.1:5000/admin/products/1
+```
+
+```json
+{
+    "price": 1150,
+    "stock": 25
+}
+```
+
+---
+
+## View Orders
+
+**GET**
+
+```
+http://127.0.0.1:5000/admin/orders
+```
+
+---
+
+## Update Order Status
+
+**PATCH**
+
+```
+http://127.0.0.1:5000/admin/orders/1/status
+```
+
+```json
+{
+    "status": "processing"
+}
+```
+
+Later
+
+```json
+{
+    "status": "shipped"
+}
+```
+
+Later
+
+```json
+{
+    "status": "delivered"
+}
+```
+
+---
+
+## Logout
+
+**POST**
+
+```
+http://127.0.0.1:5000/auth/logout
+```
+
+---
+
+# SESSION 3 — CUSTOMER 1
+
+---
+
+## Register
+
+**POST**
+
+```
+http://127.0.0.1:5000/auth/register
+```
+
+```json
+{
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "password": "Passw0rd!"
+}
+```
+
+---
+
+## Verify Email
+
+Check the terminal.
+
+Example
+
+```
+483921
+```
+
+**POST**
+
+```
+http://127.0.0.1:5000/auth/verify-email
+```
+
+```json
+{
+    "email": "jane@example.com",
+    "otp": "483921"
+}
+```
+
+---
+
+## Login
+
+**POST**
+
+```
+http://127.0.0.1:5000/auth/login
+```
+
+```json
+{
+    "email": "jane@example.com",
+    "password": "Passw0rd!"
+}
+```
+
+---
+
+## Customer Dashboard
+
+**GET**
+
+```
+http://127.0.0.1:5000/customer/dashboard
+```
+
+---
+
+## Browse Products
+
+**GET**
+
+```
+http://127.0.0.1:5000/products
+```
+
+---
+
+## Search
+
+**GET**
+
+```
+http://127.0.0.1:5000/products?search=iphone
+```
+
+---
+
+## Category Filter
+
+**GET**
+
+```
+http://127.0.0.1:5000/products?category_id=5
+```
+
+---
+
+## Price Filter
+
+**GET**
+
+```
+http://127.0.0.1:5000/products?min_price=100&max_price=1000
+```
+
+---
+
+## Product Details
+
+**GET**
+
+```
+http://127.0.0.1:5000/products/1
+```
+
+---
+
+## Add to Wishlist
+
+**POST**
+
+```
+http://127.0.0.1:5000/wishlist/add
+```
+
+```json
+{
+    "product_id": 1
+}
+```
+
+---
+
+## View Wishlist
+
+**GET**
+
+```
+http://127.0.0.1:5000/wishlist
+```
+
+---
+
+## Move Wishlist Item to Cart
+
+**POST**
+
+```
+http://127.0.0.1:5000/wishlist/1/move-to-cart
+```
+
+---
+
+## Add Another Product
+
+**POST**
+
+```
+http://127.0.0.1:5000/cart/add
+```
+
+```json
+{
+    "product_id": 3,
+    "quantity": 1
+}
+```
+
+---
+
+## View Cart
+
+**GET**
+
+```
+http://127.0.0.1:5000/cart
+```
+
+---
+
+## Update Quantity
+
+**PATCH**
+
+```
+http://127.0.0.1:5000/cart/1
+```
+
+```json
+{
+    "quantity": 3
+}
+```
+
+---
+
+## Checkout
+
+**POST**
+
+```
+http://127.0.0.1:5000/orders/checkout
+```
+
+```json
+{
+    "shipping_address": "12 Allen Avenue, Ikeja, Lagos"
+}
+```
+
+---
+
+## View Orders
+
+**GET**
+
+```
+http://127.0.0.1:5000/orders
+```
+
+---
+
+## Order Details
+
+**GET**
+
+```
+http://127.0.0.1:5000/orders/1
+```
+
+---
+
+## Pay
+
+**POST**
+
+```
+http://127.0.0.1:5000/payments/pay/1
+```
+
+```json
+{
+    "method": "card"
+}
+```
+
+---
+
+## Payment Receipt
+
+**GET**
+
+```
+http://127.0.0.1:5000/payments/1
+```
+
+---
+
+## Refresh Token
+
+**POST**
+
+```
+http://127.0.0.1:5000/auth/refresh
+```
+
+---
+
+## Logout
+
+**POST**
+
+```
+http://127.0.0.1:5000/auth/logout
+```
+
+---
+
+# SESSION 4 — CUSTOMER 2
+
+## Register
+
+**POST**
+
+```
+http://127.0.0.1:5000/auth/register
+```
+
+```json
+{
+    "name": "Michael Johnson",
+    "email": "michael@example.com",
+    "password": "Passw0rd!"
+}
+```
+
+Verify the email with the OTP printed in the terminal.
+
+---
+
+## Login
+
+**POST**
+
+```
+http://127.0.0.1:5000/auth/login
+```
+
+```json
+{
+    "email": "michael@example.com",
+    "password": "Passw0rd!"
+}
+```
+
+---
+
+## Add Products
+
+**POST**
+
+```
+http://127.0.0.1:5000/cart/add
+```
+
+```json
+{
+    "product_id": 2,
+    "quantity": 2
+}
+```
+
+---
+
+**POST**
+
+```
+http://127.0.0.1:5000/cart/add
+```
+
+```json
+{
+    "product_id": 8,
+    "quantity": 1
+}
+```
+
+---
+
+## Checkout
+
+**POST**
+
+```
+http://127.0.0.1:5000/orders/checkout
+```
+
+```json
+{
+    "shipping_address": "5 Ring Road, Ibadan, Oyo"
+}
+```
+
+---
+
+## Pay
+
+**POST**
+
+```
+http://127.0.0.1:5000/payments/pay/2
+```
+
+```json
+{
+    "method": "bank_transfer"
+}
+```
+
+---
+
+# FINAL AUTHORIZATION TESTS
+
+These tests verify your role-based access control and authentication logic.
+
+| Test                                          | Method                 | Endpoint                                     | Expected Result              |
+| --------------------------------------------- | ---------------------- | -------------------------------------------- | ---------------------------- |
+| Customer accesses `/admin/dashboard`          | GET                    | `http://127.0.0.1:5000/admin/dashboard`      | 403 Forbidden                |
+| Customer accesses `/superadmin/dashboard`     | GET                    | `http://127.0.0.1:5000/superadmin/dashboard` | 403 Forbidden                |
+| Admin accesses `/superadmin/dashboard`        | GET                    | `http://127.0.0.1:5000/superadmin/dashboard` | 403 Forbidden                |
+| No token on `/cart`                           | GET                    | `http://127.0.0.1:5000/cart`                 | 401 Unauthorized             |
+| Expired access token                          | Any protected endpoint | `http://127.0.0.1:5000/...`                  | 401 Unauthorized             |
+| Refresh with valid refresh token              | POST                   | `http://127.0.0.1:5000/auth/refresh`         | 200 OK with new access token |
+| Reuse revoked access token after logout       | GET                    | `http://127.0.0.1:5000/auth/me`              | 401 Unauthorized             |
+| Delete inactive product as customer           | DELETE                 | `http://127.0.0.1:5000/admin/products/1`     | 403 Forbidden                |
+| Checkout with an empty cart                   | POST                   | `http://127.0.0.1:5000/orders/checkout`      | 400 Bad Request              |
+| Add a nonexistent product (`product_id: 999`) | POST                   | `http://127.0.0.1:5000/cart/add`             | 404 Not Found                |
+
+This sequence exercises every major API in a realistic order: bootstrap the system as **Super Admin**, populate the catalog as **Admin**, complete full shopping journeys as **Customers**, and finish with authentication and authorization edge-case tests.
